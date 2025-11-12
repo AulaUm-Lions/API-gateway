@@ -1,24 +1,13 @@
-import express, { Express } from 'express';
-import { routes } from './routes/routes';
-import cors from 'cors';
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import routes from "./routes";
 
-import { cid } from './middleware/cid.middleware';
-import { log } from './middleware/log.middleware';
-import { errorHandling } from './middleware/error-handling.middleware';
+const app = express();
 
-const app: Express = express();
-
-app.use(cid);
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(log);
-
-// configuração das rotas
-app.use(routes);
-
-// Tratativa de erros da aplicação
-app.use(errorHandling);
+app.use(morgan("dev"));
+app.use("/api", routes);
 
 export { app };

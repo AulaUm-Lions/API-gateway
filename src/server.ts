@@ -1,6 +1,7 @@
-import { app } from './app';
-import { config } from './config/env';
+import { app } from "./app";
 
-app.listen(config.app_port, () => {
-    console.log(`Servidor "${config.app_name}" iniciado na porta: ${config.app_port}`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`API Gateway rodando na porta ${PORT}`);
 });
