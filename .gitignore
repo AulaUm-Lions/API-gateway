@@ -1,9 +1,29 @@
-# Ignorar as seguintes pastas
-/dist
-/node_modules
+# Dependencies
+node_modules/
 
-# Ignorar os seguintes arquivos
+# Environment variables
 .env
-.env.dev
-.env.hml
-.env.prd
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test coverage
+coverage/
+
+# Build
+dist/
+build/
