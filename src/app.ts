@@ -1,24 +1,42 @@
-import express, { Express } from 'express';
-import { routes } from './routes/routes';
+// src/app.ts
+import express, { Application } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import 'dotenv/config';
 
-import { cid } from './middleware/cid.middleware';
-import { log } from './middleware/log.middleware';
-import { errorHandling } from './middleware/error-handling.middleware';
+import appConfig from './config/app.config';
+import routes from './routes';
+import { errorHandler, notFoundHandler } from './middleware/error.middleware';
+import { defaultLimiter } from './middleware/rate.limit.middlewares';
 
-const app: Express = express();
+const app: Application = express();
 
-app.use(cid);
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Middlewares de segurança
+app.use(helmet());
+app.use(cors(appConfig.cors));
 
-app.use(log);
+// Middlewares de parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// configuração das rotas
+// Logger
+if (appConfig.env === 'development') {
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined'));
+}
+
+// Rate limiting global
+app.use(defaultLimiter);
+
+// Registrar rotas
 app.use(routes);
 
-// Tratativa de erros da aplicação
-app.use(errorHandling);
+// Tratamento de erro 404
+app.use(notFoundHandler);
 
-export { app };
+// Tratamento de erros global
+app.use(errorHandler);
+
+export default app;
